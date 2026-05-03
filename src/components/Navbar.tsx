@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { CalendarDays, LayoutDashboard, LogOut, Users, ListChecks, Sun, Moon } from 'lucide-react';
+import { CalendarDays, LayoutDashboard, LogOut, Users, ListChecks, Sun, Moon, BookOpen } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 
@@ -41,6 +41,14 @@ export default function Navbar() {
             >
               <ListChecks className="w-4 h-4" />
               <span className="hidden sm:inline">My Shifts</span>
+            </Link>
+
+            <Link
+              to="/tutorial"
+              className="flex items-center gap-1 text-sm px-2 py-1 rounded hover:bg-indigo-600 dark:hover:bg-indigo-800 transition-colors"
+            >
+              <BookOpen className="w-4 h-4" />
+              <span className="hidden sm:inline">Help</span>
             </Link>
 
             {profile?.role === 'admin' && (

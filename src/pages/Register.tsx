@@ -4,7 +4,6 @@ import { CalendarDays } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { supabase } from '../lib/supabase';
 import { sanitizeText } from '../lib/sanitize';
-import { checkRateLimit, recordFailedAttempt, clearAttempts } from '../lib/rateLimit';
 
 const FULL_NAME_MAX = 100;
 const EMAIL_MAX     = 254;
@@ -42,12 +41,6 @@ export default function Register() {
       return;
     }
 
-    const { blocked, secondsUntilReset } = checkRateLimit(cleanEmail);
-    if (blocked) {
-      toast.error(`Too many attempts. Try again in ${Math.ceil(secondsUntilReset / 60)} min.`);
-      return;
-    }
-
     setLoading(true);
     const { error } = await supabase.auth.signUp({
       email:    cleanEmail,
@@ -57,12 +50,10 @@ export default function Register() {
     setLoading(false);
 
     if (error) {
-      recordFailedAttempt(cleanEmail);
       toast.error(error.message);
       return;
     }
 
-    clearAttempts(cleanEmail);
     toast.success('Account created! Check your email to confirm, then sign in.');
     navigate('/login');
   }

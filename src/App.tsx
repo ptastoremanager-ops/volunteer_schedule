@@ -7,6 +7,7 @@ import Register from './pages/Register';
 import WeekView from './pages/WeekView';
 import ShiftDetail from './pages/ShiftDetail';
 import MyShifts from './pages/MyShifts';
+import Tutorial from './pages/Tutorial';
 import Dashboard from './pages/admin/Dashboard';
 import Users from './pages/admin/Users';
 
@@ -26,6 +27,7 @@ export default function App() {
             <Route path="/schedule"               element={<WeekView />} />
             <Route path="/shift/:date/:type"      element={<ShiftDetail />} />
             <Route path="/my-shifts"              element={<MyShifts />} />
+            <Route path="/tutorial"               element={<Tutorial />} />
           </Route>
 
           {/* ── Admin only ───────────────────────────────────────────────── */}
