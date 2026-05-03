@@ -1,18 +1,24 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { CalendarDays } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { supabase } from '../lib/supabase';
 import { sanitizeText } from '../lib/sanitize';
+import { useAuth } from '../context/AuthContext';
 
 const EMAIL_MAX    = 254;
 const PASSWORD_MAX = 128;
 
 export default function Login() {
   const navigate = useNavigate();
+  const { session, loading: authLoading } = useAuth();
   const [email, setEmail]       = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading]   = useState(false);
+
+  useEffect(() => {
+    if (!authLoading && session) navigate('/schedule', { replace: true });
+  }, [authLoading, session, navigate]);
 
   async function handleSubmit(e: { preventDefault(): void }) {
     e.preventDefault();
@@ -26,10 +32,7 @@ export default function Login() {
 
     if (error) {
       toast.error(error.message);
-      return;
     }
-
-    navigate('/schedule');
   }
 
   return (
