@@ -41,13 +41,7 @@ export default function SlotRow({
   // ── Filled slot ──────────────────────────────────────────────────────────
   if (signup) {
     return (
-      <div
-        className={`flex items-center justify-between px-3 py-2 rounded-lg border ${
-          signup.is_fulfilled
-            ? 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800'
-            : 'bg-white dark:bg-gray-750 border-gray-200 dark:border-gray-600'
-        }`}
-      >
+      <div className="flex items-center justify-between px-3 py-2 rounded-lg border bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-700">
         <div className="flex items-center gap-2 min-w-0">
           <span className="w-7 h-7 rounded-full bg-indigo-100 dark:bg-indigo-900 text-indigo-700 dark:text-indigo-300 flex items-center justify-center text-xs font-semibold flex-shrink-0">
             {signup.volunteer.full_name.charAt(0).toUpperCase()}
@@ -92,8 +86,8 @@ export default function SlotRow({
 
   // ── Empty slot ───────────────────────────────────────────────────────────
   return (
-    <div className="flex items-center justify-between px-3 py-2 rounded-lg border border-dashed border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50">
-      <span className="text-sm text-gray-400 dark:text-gray-500">
+    <div className="flex items-center justify-between px-3 py-2 rounded-lg border border-dashed border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/20">
+      <span className="text-sm text-red-500 dark:text-red-400">
         {isPast && !isAdmin ? 'Slot unfilled' : `Slot ${slotIndex + 1} – Open`}
       </span>
 
