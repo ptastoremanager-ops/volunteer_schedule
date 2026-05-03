@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import { format, parseISO } from 'date-fns';
-import { ChevronDown, ChevronRight } from 'lucide-react';
+import { ChevronDown, ChevronRight, Trash2 } from 'lucide-react';
+import toast from 'react-hot-toast';
 import Navbar from '../../components/Navbar';
 import { supabase } from '../../lib/supabase';
+import { useAuth } from '../../context/AuthContext';
 import { Profile, Signup } from '../../types';
 
 interface UserRow extends Profile {
@@ -10,9 +12,18 @@ interface UserRow extends Profile {
 }
 
 export default function Users() {
+  const { profile: currentUser } = useAuth();
   const [users, setUsers]       = useState<UserRow[]>([]);
   const [expanded, setExpanded] = useState<string | null>(null);
   const [loading, setLoading]   = useState(true);
+
+  async function deleteUser(user: UserRow) {
+    if (!window.confirm(`Remove ${user.full_name} from the system? This will cancel all their signups.`)) return;
+    const { error } = await supabase.from('profiles').delete().eq('id', user.id);
+    if (error) { toast.error('Could not remove user.'); return; }
+    setUsers(prev => prev.filter(u => u.id !== user.id));
+    toast.success(`${user.full_name} has been removed.`);
+  }
 
   useEffect(() => {
     async function load() {
@@ -75,13 +86,22 @@ export default function Users() {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-4 flex-shrink-0">
+                    <div className="flex items-center gap-3 flex-shrink-0">
                       <div className="text-right hidden sm:block">
                         <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">
                           {user.signups.length} signups
                         </p>
                         <p className="text-xs text-gray-400 dark:text-gray-500">{fulfilled} fulfilled</p>
                       </div>
+                      {user.id !== currentUser?.id && (
+                        <button
+                          onClick={e => { e.stopPropagation(); deleteUser(user); }}
+                          className="p-1.5 text-gray-300 dark:text-gray-600 hover:text-red-500 dark:hover:text-red-400 transition-colors"
+                          title="Remove user"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      )}
                       {isOpen ? (
                         <ChevronDown className="w-4 h-4 text-gray-400" />
                       ) : (
