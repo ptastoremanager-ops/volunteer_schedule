@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { CalendarDays } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { CalendarDays, MailCheck } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { supabase } from '../lib/supabase';
 import { sanitizeText } from '../lib/sanitize';
@@ -11,11 +11,11 @@ const PASSWORD_MIN  = 8;
 const PASSWORD_MAX  = 128;
 
 export default function Register() {
-  const navigate = useNavigate();
   const [fullName, setFullName] = useState('');
   const [email, setEmail]       = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading]   = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   async function handleSubmit(e: { preventDefault(): void }) {
     e.preventDefault();
@@ -54,8 +54,32 @@ export default function Register() {
       return;
     }
 
-    toast.success('Account created! Check your email to confirm, then sign in.');
-    navigate('/login');
+    setSubmitted(true);
+  }
+
+  if (submitted) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-white dark:from-gray-900 dark:to-gray-800 flex items-center justify-center px-4">
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-8 w-full max-w-sm border border-transparent dark:border-gray-700 text-center">
+          <div className="flex flex-col items-center gap-3 mb-6">
+            <MailCheck className="w-12 h-12 text-indigo-600 dark:text-indigo-400" />
+            <h1 className="text-xl font-bold text-gray-800 dark:text-gray-100">Check your email</h1>
+          </div>
+          <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">
+            We sent a confirmation link to <strong>{email}</strong>.
+          </p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+            Click the link in that email to verify your account, then come back here to sign in.
+          </p>
+          <Link
+            to="/login"
+            className="block w-full bg-indigo-600 text-white py-2.5 rounded-lg font-semibold text-sm hover:bg-indigo-700 transition-colors text-center"
+          >
+            Go to sign in
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (
